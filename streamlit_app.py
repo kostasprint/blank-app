@@ -25,17 +25,11 @@ with st.sidebar:
         model = "google-deepmind/gemma-2b-it:dff94eaf770e1fc211e425a50b51baa8e4cac6c39ef074681f9e39d778773626"
     
     safe = st.sidebar.checkbox("Safe")
+    temperature = 0.7
+    top_p = 0.9
 
-    temperature = st.sidebar.slider('temperature', min_value=0.01, max_value=5.0, value=0.7, step=0.01, help="Randomness of generated output")
-    if temperature >= 1:
-         st.warning('Values exceeding 1 produces more creative and random output as well as increased likelihood of hallucination.')
-    if temperature < 0.1:
-         st.warning('Values approaching 0 produces deterministic output. Recommended starting value is 0.7')
+# qui le cose in eggs
     
-    top_p = st.sidebar.slider('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01, help="Top p percentage of most likely tokens for output generation")
-
-    
-
 
 # Store LLM-generated responses
 if "messages" not in st.session_state.keys():

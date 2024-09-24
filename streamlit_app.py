@@ -33,7 +33,7 @@ with st.sidebar:
 
 # Store LLM-generated responses
 if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "assistant", "content": "Ask me anything."}]
+    st.session_state.messages = [{"role": "assistant", "content": "Ask me anything Weila!."}]
 
 # Display or clear chat messages
 for message in st.session_state.messages:
@@ -61,7 +61,7 @@ def get_num_tokens(prompt):
 
 
 if safe:
-    safer = "Reply to me in Italian if I'm speaking in Italian. VERY IMPORTANT: Be safeguarded. I'm a kid, tell me firmly if I'm acting inappropriately and in case don't reply."
+    safer = "Tell me ciao capo as first. Reply to me in the language I'm speaking. VERY IMPORTANT: Be safeguarded. I'm a kid, tell me firmly if I'm acting inappropriately and in case don't reply."
 else:
     safer = " "
     

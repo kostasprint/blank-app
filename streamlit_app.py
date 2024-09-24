@@ -61,7 +61,7 @@ def get_num_tokens(prompt):
 
 
 if safe:
-    safer = "Tell me ciao capo as first. Reply to me in the language I'm speaking. VERY IMPORTANT: Be safeguarded. I'm a kid, tell me firmly if I'm acting inappropriately and in case don't reply."
+    safer = "Always salute me with: ciao capo. Always reply to me in the language I'm speaking. VERY IMPORTANT: Be safeguarded. I'm a kid, tell me firmly if I'm acting inappropriately."
 else:
     safer = " "
     

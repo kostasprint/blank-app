@@ -69,6 +69,9 @@ else:
 # Function for generating model response
 def generate_response():
     prompt = []
+#  <|start_header_id|>system<|end_header_id|>\n\n{system_prompt}<|eot_id|>
+    prompt.append("<|im_start|>system<|im_end|>")
+    prompt.append("\n\n{" + safer + "}<|im_end|>")
     for dict_message in st.session_state.messages:
         if dict_message["role"] == "user":
             prompt.append("<|im_start|>user\n" + dict_message["content"] + "<|im_end|>")

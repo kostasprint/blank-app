@@ -29,8 +29,8 @@ with st.sidebar:
     temperature = 0.7
     top_p = 0.9
 
-# qui le cose in eggs
-    
+    # New text area for user instructions
+    user_instructions = st.text_area("Instructions for the assistant:", "")
 
 # Store LLM-generated responses
 if "messages" not in st.session_state.keys():
@@ -59,32 +59,33 @@ def get_num_tokens(prompt):
     tokens = tokenizer.tokenize(prompt)
     return len(tokens)
 
-
-
 if safe:
     safer = "VERY IMPORTANT: Be safeguarded. Assume the user is a kid, so tell her gently if she's acting inappropriately."
 else:
-    safer = " "
-    
+    safer = ""
+
 if pirate:
     pirater = "Talk as a pirate!"
 else:
-    pirater = " "
+    pirater = ""
 
+# Incorporate user instructions
+if user_instructions:
+    system_instructions = f"{user_instructions} {safer} {pirater}"
+else:
+    system_instructions = f"{safer} {pirater}"
 
 # Function for generating model response
 def generate_response():
     prompt = []
-#  <|start_header_id|>system<|end_header_id|>\n\n{system_prompt}<|eot_id|>
     prompt.append("<|im_start|>system<|im_end|>")
-    prompt.append("\n\n{Always reply to the user in the language is speaking." + pirater + safer + "}<|im_end|>")
+    prompt.append("\n\n{Always reply to the user in the language they are speaking." + system_instructions + "}<|im_end|>")
     for dict_message in st.session_state.messages:
         if dict_message["role"] == "user":
             prompt.append("<|im_start|>user\n" + dict_message["content"] + "<|im_end|>")
         else:
             prompt.append("<|im_start|>assistant\n" + dict_message["content"] + "<|im_end|>")
     
-#    prompt.append("<|im_start|>assistant" + safer + "<|im_end|>assistant")
     prompt.append("<|im_start|>assistant")
     prompt.append("")
     prompt_str = "\n".join(prompt)

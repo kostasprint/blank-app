@@ -84,7 +84,8 @@ def generate_response():
         else:
             prompt.append("<|im_start|>assistant\n" + dict_message["content"] + "<|im_end|>")
     
-    prompt.append("<|im_start|>assistant" + safer + "<|im_end|>assistant")
+#    prompt.append("<|im_start|>assistant" + safer + "<|im_end|>assistant")
+    prompt.append("<|im_start|>assistant")
     prompt.append("")
     prompt_str = "\n".join(prompt)
     

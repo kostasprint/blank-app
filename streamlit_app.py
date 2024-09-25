@@ -20,11 +20,12 @@ with st.sidebar:
     os.environ['REPLICATE_API_TOKEN'] = replicate_api
 
     st.subheader("Models and parameters")
-    model = st.selectbox("Select a model",("meta/meta-llama-3-70b-instruct","meta/meta-llama-3.1-405b-instruct"), key="model")
+    model = st.selectbox("Select a model",("meta/meta-llama-3-70b-instruct","meta/meta-llama-3.1-405b-instruct",), key="model")
     if model == "google-deepmind/gemma-2b-it":
         model = "google-deepmind/gemma-2b-it:dff94eaf770e1fc211e425a50b51baa8e4cac6c39ef074681f9e39d778773626"
     
     safe = st.sidebar.checkbox("Safe")
+    pirate = st.sidebar.checkbox("Pirate")
     temperature = 0.7
     top_p = 0.9
 
@@ -33,7 +34,7 @@ with st.sidebar:
 
 # Store LLM-generated responses
 if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "assistant", "content": "Ask me anything."}]
+    st.session_state.messages = [{"role": "assistant", "content": "Ask me anything!"}]
 
 # Display or clear chat messages
 for message in st.session_state.messages:
@@ -61,22 +62,29 @@ def get_num_tokens(prompt):
 
 
 if safe:
-    safer = "Reply to me in Italian if I'm speaking in Italian. VERY IMPORTANT: Be safeguarded. I'm a kid, tell me firmly if I'm acting inappropriately and in case don't reply."
+    safer = "VERY IMPORTANT: Be safeguarded. Assume the user is a kid, so tell her gently if she's acting inappropriately."
 else:
     safer = " "
     
+if pirate:
+    pirater = "Talk as a pirate!"
+else:
+    pirater = " "
+
 
 # Function for generating model response
 def generate_response():
     prompt = []
-    prompt.append("<|im_start|>system<|im_end|>" + safer + "<|im_end|>assistant")
+#  <|start_header_id|>system<|end_header_id|>\n\n{system_prompt}<|eot_id|>
+    prompt.append("<|im_start|>system<|im_end|>")
+    prompt.append("\n\n{Always reply to the user in the language is speaking." + pirater + safer + "}<|im_end|>")
     for dict_message in st.session_state.messages:
         if dict_message["role"] == "user":
             prompt.append("<|im_start|>user\n" + dict_message["content"] + "<|im_end|>")
         else:
             prompt.append("<|im_start|>assistant\n" + dict_message["content"] + "<|im_end|>")
     
-#    prompt.append("<|im_start|>assistant" + safer + "<|im_end|>assistant")
+    prompt.append("<|im_start|>assistant" + safer + "<|im_end|>assistant")
     prompt.append("")
     prompt_str = "\n".join(prompt)
     

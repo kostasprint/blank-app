@@ -29,6 +29,9 @@ with st.sidebar:
     temperature = 0.7
     top_p = 0.9
 
+    # New selectbox for character choice
+    character = st.selectbox("Scegli un personaggio", ("Biancaneve", "Pluto"), key="character")
+
     # New text area for user instructions
     user_instructions = st.text_area("Instructions for the assistant:", "")
 
@@ -69,11 +72,14 @@ if pirate:
 else:
     pirater = ""
 
-# Incorporate user instructions
+# Character instructions
+character_instructions = f"Assume the role of {character} and respond accordingly."
+
+# Incorporate user instructions and character choice
 if user_instructions:
-    system_instructions = f"{user_instructions} {safer} {pirater}"
+    system_instructions = f"{user_instructions} {safer} {pirater} {character_instructions}"
 else:
-    system_instructions = f"{safer} {pirater}"
+    system_instructions = f"{safer} {pirater} {character_instructions}"
 
 # Function for generating model response
 def generate_response():

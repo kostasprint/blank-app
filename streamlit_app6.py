@@ -131,11 +131,17 @@ if prompt:
     st.session_state.messages1.append({"role": "user", "content": prompt})
     st.session_state.messages2.append({"role": "user", "content": prompt})
     
+    # Display user message in both columns
     with col1:
         with st.chat_message("user"):
             st.write(prompt)
-        
-        # Generate response for Model 1
+    
+    with col2:
+        with st.chat_message("user"):
+            st.write(prompt)
+    
+    # Generate response for Model 1
+    with col1:
         if st.session_state.messages1[-1]["role"] != "assistant":
             with st.chat_message("assistant"):
                 response = generate_response(prompt, model1, temperature1, max_tokens1, st.session_state.messages1)
@@ -143,11 +149,8 @@ if prompt:
             message = {"role": "assistant", "content": full_response}
             st.session_state.messages1.append(message)
     
+    # Generate response for Model 2 after Model 1 has finished
     with col2:
-        with st.chat_message("user"):
-            st.write(prompt)
-        
-        # Generate response for Model 2
         if st.session_state.messages2[-1]["role"] != "assistant":
             with st.chat_message("assistant"):
                 response = generate_response(prompt, model2, temperature2, max_tokens2, st.session_state.messages2)

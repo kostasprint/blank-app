@@ -19,18 +19,22 @@ with st.sidebar:
             st.warning('Please enter your OpenRouter API key.', icon='⚠️')
             st.markdown("**Don't have an API key?** Head over to [OpenRouter](https://openrouter.ai) to sign up for one.")
 
-    st.subheader("Model 1")
-    model1 = st.selectbox("Select model 1", ("openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06"), key="model1")
-    temperature1 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp1")
-    max_tokens1 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens1")
+    # Create two columns in the sidebar
+    col1, col2 = st.columns(2)
 
-    st.subheader("Model 2")
-    model2 = st.selectbox("Select model 2", ("openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06"), key="model2")
-    temperature2 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp2")
-    max_tokens2 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens2")
+    with col1:
+        st.subheader("Model 1")
+        model1 = st.selectbox("Select model 1", ("openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06", "google/gemini-flash-1.5-8b"), key="model1")
+        temperature1 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp1")
+        max_tokens1 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens1")
 
-    safe = st.sidebar.checkbox("Safe")
-    pirate = st.sidebar.checkbox("Pirate")
+    with col2:
+        st.subheader("Model 2")
+        model2 = st.selectbox("Select model 2", ("google/gemini-flash-1.5-8b", "openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06"), key="model2")
+        temperature2 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp2")
+        max_tokens2 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens2")
+
+    safe = st.checkbox("Safe")
 
     # New text area for user instructions
     user_instructions = st.text_area("Instructions for the assistants:", "")
@@ -61,13 +65,8 @@ if safe:
 else:
     safer = ""
 
-if pirate:
-    pirater = "Talk as a pirate!"
-else:
-    pirater = ""
-
 # Incorporate user instructions
-system_instructions = f"{user_instructions} {safer} {pirater}".strip()
+system_instructions = f"{user_instructions} {safer}".strip()
 
 # Function for generating model response
 def generate_response(prompt, model, temperature, max_tokens, messages):

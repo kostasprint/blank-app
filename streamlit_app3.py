@@ -5,7 +5,7 @@ import json
 from transformers import AutoTokenizer
 
 # App title
-st.set_page_config(page_title="WeMake Streamlit OpenRouter Chatbot", page_icon="💬")
+st.set_page_config(page_title="WeMake Streamlit OpenRouter Chatbot", page_icon="💬", layout="wide")
 
 # OpenRouter Credentials
 with st.sidebar:
@@ -19,29 +19,35 @@ with st.sidebar:
             st.warning('Please enter your OpenRouter API key.', icon='⚠️')
             st.markdown("**Don't have an API key?** Head over to [OpenRouter](https://openrouter.ai) to sign up for one.")
 
-    st.subheader("Models and parameters")
-    model = st.selectbox("Select a model", ("openai/gpt-4o-mini-2024-07-18", "openai/gpt-3.5-turbo", "anthropic/claude-2", "google/palm-2-chat-bison"), key="model", index=0)
-    
-    temperature = st.slider("Temperature", min_value=0.0, max_value=2.0, value=0.7, step=0.1)
-    max_tokens = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1)
+    # Create two columns in the sidebar
+    col1, col2 = st.columns(2)
 
-    # New selectbox for character choice
-    character = st.selectbox("Choose a character", ("", "Snow White", "Pluto"), key="character")
+    with col1:
+        st.subheader("Model 1")
+        model1 = st.selectbox("Select model 1", ("openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06", "google/gemini-flash-1.5-8b", "meta-llama/llama-3.1-405b-instruct:free"), key="model1")
+        temperature1 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp1")
+        max_tokens1 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens1")
+
+    with col2:
+        st.subheader("Model 2")
+        model2 = st.selectbox("Select model 2", ("google/gemini-flash-1.5-8b", "openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06", "meta-llama/llama-3.1-405b-instruct:free"), key="model2")
+        temperature2 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp2")
+        max_tokens2 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens2")
+
+    safe = st.checkbox("Safe")
 
     # New text area for user instructions
-    user_instructions = st.text_area("Instructions for the assistant:", "")
+    user_instructions = st.text_area("Instructions for the assistants:", "")
 
 # Store LLM-generated responses
-if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "assistant", "content": "Ask me anything!"}]
-
-# Display or clear chat messages
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+if "messages1" not in st.session_state.keys():
+    st.session_state.messages1 = [{"role": "assistant", "content": "Ask me anything!"}]
+if "messages2" not in st.session_state.keys():
+    st.session_state.messages2 = [{"role": "assistant", "content": "Ask me anything!"}]
 
 def clear_chat_history():
-    st.session_state.messages = [{"role": "assistant", "content": "Ask me anything."}]
+    st.session_state.messages1 = [{"role": "assistant", "content": "Ask me anything."}]
+    st.session_state.messages2 = [{"role": "assistant", "content": "Ask me anything."}]
 
 st.sidebar.button('Clear chat history', on_click=clear_chat_history)
 
@@ -54,22 +60,29 @@ def get_num_tokens(prompt):
     tokens = tokenizer.tokenize(prompt)
     return len(tokens)
 
-# Character instructions
-character_instructions = f"Assume the role of {character} and respond accordingly." if character else ""
+if safe:
+    safer = "VERY IMPORTANT: Be safeguarded. Assume the user is a kid, so tell her gently if she's acting inappropriately."
+else:
+    safer = ""
 
-# Incorporate user instructions and character choice
-system_instructions = f"{user_instructions} {character_instructions}".strip()
+#my system instruction
+my_system_instructions = "Talk the language the user want."
+
+# Incorporate user instructions
+system_instructions = f"{user_instructions} {safer} {my_system_instructions}".strip()
 
 # Function for generating model response
-def generate_response(prompt):
+def generate_response(prompt, model, temperature, max_tokens, messages):
     headers = {
         "Authorization": f"Bearer {openrouter_api_key}",
         "Content-Type": "application/json"
     }
 
+    messages = [{"role": "system", "content": system_instructions}] + messages + [{"role": "user", "content": prompt}]
+
     data = {
         "model": model,
-        "messages": st.session_state.messages + [{"role": "user", "content": prompt}],
+        "messages": messages,
         "temperature": temperature,
         "max_tokens": max_tokens,
         "stream": True
@@ -97,16 +110,52 @@ def generate_response(prompt):
                 except json.JSONDecodeError:
                     continue
 
-# User-provided prompt
-if prompt := st.chat_input(disabled=not openrouter_api_key):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.write(prompt)
+# Create two columns
+col1, col2 = st.columns(2)
 
-# Generate a new response if last message is not from assistant
-if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant"):
-        response = generate_response(prompt)
-        full_response = st.write_stream(response)
-    message = {"role": "assistant", "content": full_response}
-    st.session_state.messages.append(message)
+# Display chat messages for both models
+with col1:
+    st.subheader("Model 1")
+    for message in st.session_state.messages1:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
+
+with col2:
+    st.subheader("Model 2")
+    for message in st.session_state.messages2:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
+
+# User-provided prompt (shared between both models)
+prompt = st.chat_input(disabled=not openrouter_api_key)
+
+if prompt:
+    st.session_state.messages1.append({"role": "user", "content": prompt})
+    st.session_state.messages2.append({"role": "user", "content": prompt})
+    
+    # Display user message in both columns
+    with col1:
+        with st.chat_message("user"):
+            st.write(prompt)
+    
+    with col2:
+        with st.chat_message("user"):
+            st.write(prompt)
+    
+    # Generate response for Model 1
+    with col1:
+        if st.session_state.messages1[-1]["role"] != "assistant":
+            with st.chat_message("assistant"):
+                response = generate_response(prompt, model1, temperature1, max_tokens1, st.session_state.messages1)
+                full_response = st.write_stream(response)
+            message = {"role": "assistant", "content": full_response}
+            st.session_state.messages1.append(message)
+    
+    # Generate response for Model 2 after Model 1 has finished
+    with col2:
+        if st.session_state.messages2[-1]["role"] != "assistant":
+            with st.chat_message("assistant"):
+                response = generate_response(prompt, model2, temperature2, max_tokens2, st.session_state.messages2)
+                full_response = st.write_stream(response)
+            message = {"role": "assistant", "content": full_response}
+            st.session_state.messages2.append(message)

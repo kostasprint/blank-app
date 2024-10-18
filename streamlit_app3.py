@@ -27,7 +27,7 @@ with st.sidebar:
         model1 = st.selectbox("Select model 1", ("openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06", "google/gemini-flash-1.5-8b", "nvidia/llama-3.1-nemotron-70b-instruct", "qwen/qwen-2.5-72b-instruct", "meta-llama/llama-3.2-90b-vision-instruct"), key="model1")
         #temperature1 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp1")
         #max_tokens1 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens1")
-        temperature1 = 1.0,
+        temperature1 = 1.0
         max_tokens1 = 1000
 
     with col2:
@@ -35,8 +35,8 @@ with st.sidebar:
         model2 = st.selectbox("Select model 2", ("google/gemini-flash-1.5-8b", "openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06", "nvidia/llama-3.1-nemotron-70b-instruct", "qwen/qwen-2.5-72b-instruct", "meta-llama/llama-3.2-90b-vision-instruct"), key="model2")
         #temperature2 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp2")
         #max_tokens2 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens2")
-        temperature1 = 1.0,
-        max_tokens1 = 1000
+        temperature2 = 1.0
+        max_tokens2 = 1000
     
     st.divider()
     
@@ -72,7 +72,7 @@ else:
     safer = ""
 
 #my system instruction
-my_system_instructions = "Talk the language the user want."
+my_system_instructions = "Use the language the user is using. Use one language."
 
 # Incorporate user instructions
 system_instructions = f"{user_instructions} {safer} {my_system_instructions}".strip()

@@ -5,12 +5,12 @@ import json
 from transformers import AutoTokenizer
 
 # App title
-st.set_page_config(page_title="WeMake Streamlit OpenRouter Chatbot", page_icon="💬", layout="wide")
+st.set_page_config(page_title="WeMake Streamlit OpenRouter", page_icon="💬", layout="wide")
 
 # OpenRouter Credentials
 with st.sidebar:
-    st.title('💬 WeMake Streamlit OpenRouter Chatbot')
-    st.write('Create chatbots using various LLM models hosted at [OpenRouter](https://openrouter.ai/).')
+    st.title('💬 WeMake Streamlit OpenRouter ')
+    st.write('Models hosted at [OpenRouter](https://openrouter.ai/).')
     if 'OPENROUTER_API_KEY' in st.secrets:
         openrouter_api_key = st.secrets['OPENROUTER_API_KEY']
     else:
@@ -24,16 +24,22 @@ with st.sidebar:
 
     with col1:
         st.subheader("Model 1")
-        model1 = st.selectbox("Select model 1", ("openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06", "google/gemini-flash-1.5-8b", "meta-llama/llama-3.1-405b-instruct:free"), key="model1")
-        temperature1 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp1")
-        max_tokens1 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens1")
+        model1 = st.selectbox("Select model 1", ("openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06", "google/gemini-flash-1.5-8b", "nvidia/llama-3.1-nemotron-70b-instruct", "qwen/qwen-2.5-72b-instruct", "meta-llama/llama-3.2-90b-vision-instruct"), key="model1")
+        #temperature1 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp1")
+        #max_tokens1 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens1")
+        temperature1 = 1.0,
+        max_tokens1 = 1000
 
     with col2:
         st.subheader("Model 2")
-        model2 = st.selectbox("Select model 2", ("google/gemini-flash-1.5-8b", "openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06", "meta-llama/llama-3.1-405b-instruct:free"), key="model2")
-        temperature2 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp2")
-        max_tokens2 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens2")
-
+        model2 = st.selectbox("Select model 2", ("google/gemini-flash-1.5-8b", "openai/gpt-4o-mini-2024-07-18","openai/gpt-4o-2024-08-06", "nvidia/llama-3.1-nemotron-70b-instruct", "qwen/qwen-2.5-72b-instruct", "meta-llama/llama-3.2-90b-vision-instruct"), key="model2")
+        #temperature2 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp2")
+        #max_tokens2 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens2")
+        temperature1 = 1.0,
+        max_tokens1 = 1000
+    
+    st.divider()
+    
     safe = st.checkbox("Safe")
 
     # New text area for user instructions

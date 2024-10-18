@@ -72,7 +72,7 @@ else:
     safer = ""
 
 #my system instruction
-my_system_instructions = "Use the language the user is using. Use one language."
+my_system_instructions = "Use the language the user is using in the last prompt. Use only one language."
 
 # Incorporate user instructions
 system_instructions = f"{user_instructions} {safer} {my_system_instructions}".strip()

@@ -24,7 +24,7 @@ with st.sidebar:
 
     with col1:
         st.subheader("Model 1")
-        model1 = st.selectbox("Select model 1", ("openai/gpt-4o-mini","meta-llama/llama-3.2-90b-vision-instruct:free","anthropic/claude-3-haiku","google/gemini-flash-1.5","openai/gpt-4o", "nvidia/llama-3.1-nemotron-70b-instruct", "qwen/qwen-2.5-72b-instruct"), key="model1")
+        model1 = st.selectbox("Select model 1", ("openai/gpt-4o-mini","meta-llama/llama-3.2-90b-vision-instruct:free","anthropic/claude-3-haiku","google/gemini-flash-1.5","nvidia/llama-3.1-nemotron-70b-instruct", "qwen/qwen-2.5-72b-instruct"), key="model1")
         #temperature1 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp1")
         #max_tokens1 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens1")
         temperature1 = 1.0
@@ -32,7 +32,7 @@ with st.sidebar:
 
     with col2:
         st.subheader("Model 2")
-        model2 = st.selectbox("Select model 2", ("meta-llama/llama-3.2-90b-vision-instruct:free","anthropic/claude-3-haiku","google/gemini-flash-1.5","openai/gpt-4o-mini","openai/gpt-4o", "nvidia/llama-3.1-nemotron-70b-instruct", "qwen/qwen-2.5-72b-instruct"), key="model2")
+        model2 = st.selectbox("Select model 2", ("meta-llama/llama-3.2-90b-vision-instruct:free","anthropic/claude-3-haiku","google/gemini-flash-1.5","openai/gpt-4o-mini","nvidia/llama-3.1-nemotron-70b-instruct", "qwen/qwen-2.5-72b-instruct"), key="model2")
         #temperature2 = st.slider("Temperature", min_value=0.0, max_value=2.0, value=1.0, step=0.1, key="temp2")
         #max_tokens2 = st.number_input("Max Tokens", min_value=1, max_value=4096, value=1000, step=1, key="max_tokens2")
         temperature2 = 1.0
